@@ -6,6 +6,7 @@
 */
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { IUser } from "../../models/IUser";
+import { fetchUsers } from "./fetchUsers";
 
 interface UserSlice {
   user: IUser[];
@@ -32,19 +33,33 @@ export const userSlice = createSlice({
     increment(state, action: PayloadAction<number>) {
       state.count += action.payload;
     },
-    fetchingUser(state) {
-      state.isLoading = true;
-    },
-    fetchingUserSucces(state, action: PayloadAction<IUser[]>) {
+    // fetchingUser(state) {
+    //   state.isLoading = true;
+    // },
+    // fetchingUserSucces(state, action: PayloadAction<IUser[]>) {
+    //   state.isLoading = false;
+    //   state.error = '';
+    //   state.user = action.payload
+    // },
+    // fetchingUserError(state, action: PayloadAction<string>) {
+    //     state.isLoading = false;
+    //     state.error = action.payload;
+    // }
+  },  
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsers.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.error = '';
-      state.user = action.payload
-    },
-    fetchingUserError(state, action: PayloadAction<string>) {
-        state.isLoading = false;
-        state.error = action.payload;
-    }
-  },
+      state.error = ''
+      state.user = payload
+    })
+    builder.addCase(fetchUsers.rejected, (state, {payload}) => {
+      state.isLoading = false;
+      state.error += payload;
+    })
+    builder.addCase(fetchUsers.pending, (state) => {
+      state.isLoading = true;
+    })
+  }
 });
 
 export default userSlice.reducer;
