@@ -8,7 +8,6 @@ export const PostContainer2 = () => {
     const plusObject = () => {
         setLimit(limit + 1);
     }
-    console.log(limit);
     return (
         <div>
             <button onClick={plusObject}>
